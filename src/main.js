@@ -3,14 +3,15 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import router from './router'
+import { LoadingPlugin} from "vue-loading-overlay"
 
 import api from './commonJs/api'
 
 const app = createApp(App)
 
-const cgp = app.config.globalProperties
-api(cgp)
+api(app.config.globalProperties)
 
 app
+    .use(LoadingPlugin)
     .use(router)
     .mount('#app')

@@ -69,10 +69,10 @@ const showLoading = () => {
   <div class="container_absolute"></div>
   <div class="container_dream">
     <div class="dream_box_title">
-      <label>당신의 꿈을 해몽해드릴게요!</label>
+      <label>1 ~ 현재까지의 회차 번호를 학습한 AI가 로또번호를 추천 해줍니다!</label>
     </div>
     <textarea class="dream_box" placeholder="꿈 내용을 입력해 주세요." v-model="prompt"></textarea>
-    <button class="dream_button" v-show="!btnShow" @click="start">해몽 시작</button>
+    <button class="dream_button" v-show="!btnShow" @click="start">추첨 시작</button>
     <div v-show="btnShow" ref="textareaRef"></div>
     <p class="dream_p" v-show="msgShow">{{ msg }}</p>
   </div>
@@ -85,7 +85,7 @@ const showLoading = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/MoneyverseStanding.png");
+    background-image: url("/public/imgs/moneyverse.png");
     background-repeat: no-repeat;
     background-size: cover;
 }

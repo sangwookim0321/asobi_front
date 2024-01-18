@@ -47,7 +47,8 @@ export default property => {
 
     // --------------------- EndPoint ---------------------
     property.$DOMAIN = import.meta.env.VITE_APP_DOMAIN
-    property.$EXCHANGE_LIST = '/exchange/list'
+    property.$GPT_DREAM_HELPER = '/gpt-api/dream-helper'
+    property.$GPT_THREAD_DELETE = '/gpt-api/gpt-thread'
 
     // --------------------- GET ---------------------
     property.$get = function (callUrl, caller, useToken, success, fail) {
@@ -105,7 +106,7 @@ export default property => {
         axios.post(this.$DOMAIN + callUrl, postData, _reqOption).then((response) => {
             pending_post[arguments[0] + caller] = false
 
-            if (response.data.result === true) {
+            if (response.status === 200) {
                 success(response.data)
             } else {
                 fail(response)
