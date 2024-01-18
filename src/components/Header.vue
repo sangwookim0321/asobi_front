@@ -6,6 +6,9 @@
   <div class="container_header">
     <div class="header_box">
       <ul class="header_ul">
+        <li>
+          <img class="logo" src="/public/imgs/asobi_logo.png" alt="logo">
+        </li>
         <li>AI 꿈해몽</li>
         <li>AI 로또번호</li>
         <li>AI 심리상담</li>
@@ -33,11 +36,30 @@
     width: 100%;
 }
 .header_ul li {
+    font-family: Consolas, sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #494949;
+}
+.header_ul li:hover {
+    color: #212121;
+}
+.logo {
+    width: 50px;
+    height: 50px;
 }
 
 @media (max-width: 768px) {
     .header_box {
-        width: 350px;
+        width: 100%;
+    }
+    .header_ul {
+        justify-content: space-evenly;
+    }
+    .logo {
+        width: 40px;
+        height: 40px;
     }
 }
 </style>
