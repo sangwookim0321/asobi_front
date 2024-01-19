@@ -1,82 +1,94 @@
 <script setup>
-import { ref, getCurrentInstance } from 'vue'
-
-const msg = ref('')
-const msgShow = ref(false)
-const btnShow = ref(false)
-const loader = ref('')
-const prompt = ref('')
-const threadId = ref('')
+import { ref, getCurrentInstance, onMounted } from 'vue'
 
 const { proxy } = getCurrentInstance()
 
-const start = () => {
-    if (prompt.value === '') {
-        msg.value = '내용을 입력해주세요.'
-        msgShow.value = true
-        return
-    } else {
-        msgShow.value = false
-        btnShow.value = true
-    }
+onMounted(() => {
+    const canvas = document.getElementById('lottoCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 500; // lotto_box의 너비에 맞춤
+    canvas.height = 500; // lotto_box의 높이에 맞춤
 
-    showLoading()
-
-    const data = {
-        prompt: prompt.value,
-        type: 'dream',
-    }
-
-    proxy.$post(proxy.$GPT_DREAM_HELPER, 'Dream', data, false, (res) => {
-        console.log(res)
-        btnShow.value = false
-        loader.value.hide()
-    }, (err) => {
-        console.log(err)
-        btnShow.value = false
-        loader.value.hide()
-        if (err.response.status === 500) {
-            msgShow.value = true
-            msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
+    class Ball {
+        constructor(x, y, number) {
+            this.x = x;
+            this.y = y;
+            this.number = number;
+            this.size = 20;
+            this.c = `rgba(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+            this.angle = Math.random() * (Math.PI * 2);
+            this.power = 8;
+            this.directionX = this.power * Math.cos(this.angle);
+            this.weight = this.power * Math.sin(this.angle);
         }
-    })
-}
 
-const threadDelete = () => {
-    const data = {
-        threadId: threadId.value,
+        update() {
+            if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                this.weight *= -1;
+            }
+
+            if (this.x > canvas.width - this.size || this.x - this.size < 0) {
+                this.directionX *= -1;
+            }
+
+            this.x += this.directionX;
+            this.y += this.weight;
+        }
+
+        draw() {
+            ctx.fillStyle = this.c;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, true);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = 'black';
+            ctx.font = '15px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(this.number, this.x, this.y);
+        }
     }
-    proxy.$delete(proxy.$GPT_THREAD_DELETE, 'Dream', {}, false, (res) => {
-        console.log(res)
-    }, (err) => {
-        console.log(err)
-    })
-}
 
-const showLoading = () => {
-    loader.value = proxy.$loading.show({
-        container: proxy.$refs.textareaRef,
-        zIndex: 9999,
-        width: 100,
-        height: 100,
-        loader: "bars",
-        canCancel: false,
-    })
-}
+    let balls = [];
+
+    function init() {
+        for (let i = 0; i < 45; i++) {
+            balls.push(new Ball(canvas.width / 2, canvas.height / 2, i + 1));
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < balls.length; i++) {
+            balls[i].update();
+            balls[i].draw();
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+});
 </script>
+
+
 
 <template>
   <div class="container_absolute"></div>
-  <div class="container_dream">
-    <div class="dream_box_title">
+  <div class="container_lotto">
+    <div class="lotto_box_title">
       <label>1 ~ 현재까지의 회차 번호를 학습한 AI가 로또번호를 추천 해줍니다!</label>
     </div>
-    <textarea class="dream_box" placeholder="꿈 내용을 입력해 주세요." v-model="prompt"></textarea>
-    <button class="dream_button" v-show="!btnShow" @click="start">추첨 시작</button>
-    <div v-show="btnShow" ref="textareaRef"></div>
-    <p class="dream_p" v-show="msgShow">{{ msg }}</p>
+    <div class="lotto_box">
+      <canvas id="lottoCanvas"></canvas> <!-- 캔버스 추가 -->
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 .container_absolute {
@@ -89,14 +101,14 @@ const showLoading = () => {
     background-repeat: no-repeat;
     background-size: cover;
 }
-.container_dream {
+.container_lotto {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     margin-top: 20px;
 }
-.dream_box_title {
+.lotto_box_title {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,7 +120,8 @@ const showLoading = () => {
     color: #494949;
 
 }
-.dream_box {
+.lotto_box {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -118,6 +131,14 @@ const showLoading = () => {
     background: #e1e1e1;
     border-radius: 12px;
 }
+#lottoCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 textarea {
     width: 100%;
     height: 100%;
@@ -131,7 +152,7 @@ textarea {
     padding: 1rem 1rem 3rem 1rem;
     font-family: Consolas, sans-serif;
 }
-.dream_button {
+.lotto_button {
     margin-top: 8px;
     width: 120px;
     height: 35px;
@@ -146,7 +167,7 @@ textarea {
     opacity: 0.6;
     transition: 0.5s ease-in-out;
 }
-.dream_button:hover {
+.lotto_button:hover {
     opacity: 1;
     transition: 0.5s ease-in-out;
 }
@@ -175,7 +196,7 @@ textarea::-webkit-scrollbar-thumb:hover {
     background: #555; /* 호버 시 핸들의 색상 */
 }
 
-.dream_p {
+.lotto_p {
     margin-top: 8px;
     font-family: Consolas, sans-serif;
     font-size: 0.8rem;
@@ -189,20 +210,20 @@ textarea::-webkit-scrollbar-thumb:hover {
         width: 200px;
         height: 200px;
     }
-    .container_dream {
+    .container_lotto {
         padding-top: 200px;
     }
     textarea {
         font-size: 0.9rem;
     }
-    .dream_box_title {
+    .lotto_box_title {
         font-size: 1rem;
     }
-    .dream_box {
+    .lotto_box {
         width: 200px;
         height: 200px;
     }
-    .dream_button {
+    .lotto_button {
         bottom: 18%;
         width: 80px;
         height: 25px;

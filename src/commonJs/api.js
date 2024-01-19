@@ -8,7 +8,7 @@ export default property => {
             headers: {
                 'Content-Type': 'Application/json',
             },
-            timeout: 60000,
+            timeout: 120000,
         }
     }
     let reqOptionWithToken = () => {
@@ -17,7 +17,7 @@ export default property => {
                 'Content-Type': 'Application/json',
                 'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
             },
-            timeout: 60000,
+            timeout: 120000,
         }
     }
     let reqOptionForDownload = () => {
@@ -47,7 +47,7 @@ export default property => {
 
     // --------------------- EndPoint ---------------------
     property.$DOMAIN = import.meta.env.VITE_APP_DOMAIN
-    property.$GPT_DREAM_HELPER = '/gpt-api/dream-helper'
+    property.$GPT_DREAM_HELPER = '/gpt-api/gpt-helper'
     property.$GPT_THREAD_DELETE = '/gpt-api/gpt-thread'
 
     // --------------------- GET ---------------------
@@ -140,7 +140,7 @@ export default property => {
         axios.put(this.$DOMAIN + callUrl, postData, _reqOption).then((response) => {
             pending_put[arguments[0] + caller] = false
 
-            if (response.data.result === true) {
+            if (response.status === 200) {
                 success(response.data)
             } else {
                 fail(response)
@@ -173,7 +173,7 @@ export default property => {
         axios.delete(this.$DOMAIN + callUrl, _reqOption).then((response) => {
             pending_delete[arguments[0] + caller] = false
 
-            if (response.data.result === true) {
+            if (response.status === 200) {
                 success(response.data)
             } else {
                 fail(response)

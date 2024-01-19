@@ -4,9 +4,11 @@ import { ref, getCurrentInstance } from 'vue'
 const msg = ref('')
 const msgShow = ref(false)
 const btnShow = ref(false)
+const success = ref(false)
 const loader = ref('')
 const prompt = ref('')
-const threadId = ref('')
+
+const item = ref({ content: '', role: '', threadId: '' })
 
 const { proxy } = getCurrentInstance()
 
@@ -16,7 +18,8 @@ const start = () => {
         msgShow.value = true
         return
     } else {
-        msgShow.value = false
+        msg.value = '10초~1분 이상의 시간이 소요됩니다. 잠시만 기다려주세요.'
+        msgShow.value = true
         btnShow.value = true
     }
 
@@ -29,11 +32,20 @@ const start = () => {
 
     proxy.$post(proxy.$GPT_DREAM_HELPER, 'Dream', data, false, (res) => {
         console.log(res)
+        const { content, role, threadId } = res.data[0]
+        item.value = { content, role, threadId }
+
+        prompt.value = item.value.content
+
         btnShow.value = false
+        msgShow.value = false
+        success.value = true
         loader.value.hide()
+        threadDelete()
     }, (err) => {
-        console.log(err)
+        console.log(err.code)
         btnShow.value = false
+        msgShow.value = false
         loader.value.hide()
         if (err.response.status === 500) {
             msgShow.value = true
@@ -43,10 +55,7 @@ const start = () => {
 }
 
 const threadDelete = () => {
-    const data = {
-        threadId: threadId.value,
-    }
-    proxy.$delete(proxy.$GPT_THREAD_DELETE, 'Dream', {}, false, (res) => {
+    proxy.$delete(`${proxy.$GPT_THREAD_DELETE}?threadId=${item.value.threadId}`, 'Dream', false, (res) => {
         console.log(res)
     }, (err) => {
         console.log(err)
@@ -57,11 +66,17 @@ const showLoading = () => {
     loader.value = proxy.$loading.show({
         container: proxy.$refs.textareaRef,
         zIndex: 9999,
-        width: 100,
-        height: 100,
+        width: 60,
+        height: 60,
         loader: "bars",
         canCancel: false,
     })
+}
+
+const reset = () => {
+    prompt.value = ''
+    item.value = { content: '', role: '', threadId: '' }
+    success.value = false
 }
 </script>
 
@@ -71,10 +86,11 @@ const showLoading = () => {
     <div class="dream_box_title">
       <label>당신의 꿈을 해몽해드릴게요!</label>
     </div>
-    <textarea class="dream_box" placeholder="꿈 내용을 입력해 주세요." v-model="prompt"></textarea>
-    <button class="dream_button" v-show="!btnShow" @click="start">해몽 시작</button>
+    <textarea class="dream_box" placeholder="꿈 내용을 입력해 주세요." :style="success ? 'color: #3DA46C' : ''" :disabled="success" v-model="prompt"></textarea>
+    <button class="dream_button" v-show="!btnShow && !success" @click="start">해몽 시작</button>
+    <button class="dream_button" v-show="success" @click="reset">다시하기</button>
     <div v-show="btnShow" ref="textareaRef"></div>
-    <p class="dream_p" v-show="msgShow">{{ msg }}</p>
+    <p :style="msg === '10초~1분의 시간이 소요됩니다. 잠시만 기다려주세요.' ? 'color: #3DA46C' : ''" class="dream_p" v-show="msgShow">{{ msg }}</p>
   </div>
 </template>
 
@@ -149,6 +165,7 @@ textarea {
 .dream_button:hover {
     opacity: 1;
     transition: 0.5s ease-in-out;
+    background: #3DA46C;
 }
 /* 스크롤바 전체 스타일 */
 textarea::-webkit-scrollbar {

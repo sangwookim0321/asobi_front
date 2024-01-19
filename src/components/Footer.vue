@@ -10,11 +10,13 @@
 
 <style scoped>
 .container_footer {
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100px;
+    bottom: 0;
     background: #FFBA53;
 }
 
