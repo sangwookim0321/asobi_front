@@ -1,6 +1,8 @@
 <script setup>
 import { ref, getCurrentInstance } from 'vue'
 
+const { proxy } = getCurrentInstance()
+
 const msg = ref('')
 const msgShow = ref(false)
 const btnShow = ref(false)
@@ -10,7 +12,6 @@ const prompt = ref('')
 
 const item = ref({ content: '', role: '', threadId: '' })
 
-const { proxy } = getCurrentInstance()
 
 const start = () => {
     if (prompt.value === '') {
@@ -30,7 +31,7 @@ const start = () => {
         type: 'dream',
     }
 
-    proxy.$post(proxy.$GPT_DREAM_HELPER, 'Dream', data, false, (res) => {
+    proxy.$post(proxy.$GPT_HELPER, 'Dream', data, false, (res) => {
         console.log(res)
         const { content, role, threadId } = res.data[0]
         item.value = { content, role, threadId }

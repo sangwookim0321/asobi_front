@@ -47,8 +47,9 @@ export default property => {
 
     // --------------------- EndPoint ---------------------
     property.$DOMAIN = import.meta.env.VITE_APP_DOMAIN
-    property.$GPT_DREAM_HELPER = '/gpt-api/gpt-helper'
+    property.$GPT_HELPER = '/gpt-api/gpt-helper'
     property.$GPT_THREAD_DELETE = '/gpt-api/gpt-thread'
+    property.$TEST_API = '/gpt-api/test-api'
 
     // --------------------- GET ---------------------
     property.$get = function (callUrl, caller, useToken, success, fail) {
