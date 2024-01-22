@@ -98,8 +98,6 @@ const start = () => {
         let contentArray = JSON.parse(res.data[0].content)
 
         item.value = { content: contentArray, role, threadId }
-        console.log(item.value)
-        console.log(item.value.content)
 
         btnShow.value = false
         success.value = true
@@ -314,7 +312,9 @@ textarea::-webkit-scrollbar-thumb:hover {
         font-size: 0.9rem;
     }
     .lotto_box_title {
+        width: 80%;
         font-size: 1rem;
+        text-align: center;
     }
     .lotto_box {
         width: 200px;
@@ -325,6 +325,10 @@ textarea::-webkit-scrollbar-thumb:hover {
         width: 80px;
         height: 25px;
         font-size: 0.8rem;
+    }
+    .lotto_p {
+        width: 80%;
+        text-align: center;
     }
 }
 </style>

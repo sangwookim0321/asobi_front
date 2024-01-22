@@ -32,7 +32,6 @@ const start = () => {
     }
 
     proxy.$post(proxy.$GPT_HELPER, 'Dream', data, false, (res) => {
-        console.log(res)
         const { content, role, threadId } = res.data[0]
         item.value = { content, role, threadId }
 
@@ -44,7 +43,7 @@ const start = () => {
         loader.value.hide()
         threadDelete()
     }, (err) => {
-        console.log(err.code)
+        console.log(err)
         btnShow.value = false
         msgShow.value = false
         loader.value.hide()
@@ -91,7 +90,7 @@ const reset = () => {
     <button class="dream_button" v-show="!btnShow && !success" @click="start">해몽 시작</button>
     <button class="dream_button" v-show="success" @click="reset">다시하기</button>
     <div v-show="btnShow" ref="textareaRef"></div>
-    <p :style="msg === '10초~1분의 시간이 소요됩니다. 잠시만 기다려주세요.' ? 'color: #3DA46C' : ''" class="dream_p" v-show="msgShow">{{ msg }}</p>
+    <p :style="msg === '10초~1분 이상의 시간이 소요됩니다. 잠시만 기다려주세요.' ? 'color: #3DA46C' : ''" class="dream_p" v-show="msgShow">{{ msg }}</p>
   </div>
 </template>
 
