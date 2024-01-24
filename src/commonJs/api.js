@@ -66,7 +66,7 @@ export default property => {
             if (token && token.length > 0) {
                 _reqOption = reqOptionWithToken()
             } else {
-                this.$router.replace({ name: 'Splash' })
+                this.$router.replace({ name: 'Main' })
             }
         }
 

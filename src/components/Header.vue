@@ -11,7 +11,7 @@
         </li>
         <li @click="$router.push({ name: 'DreamInterpretation' })">AI꿈해몽</li>
         <li @click="$router.push({ name: 'Lotto' })">AI로또번호</li>
-        <li>AI심리상담</li>
+        <li @click="$router.push({ name: 'Chat' })">AI심리상담</li>
 <!--        <li>메뉴</li>-->
       </ul>
     </div>
