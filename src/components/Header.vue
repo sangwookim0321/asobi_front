@@ -9,10 +9,10 @@
         <li>
           <img class="logo" src="/public/imgs/asobi_logo.png" alt="logo">
         </li>
-        <li @click="$router.push({ name: 'DreamInterpretation' })">AI꿈해몽</li>
-        <li @click="$router.push({ name: 'Lotto' })">AI로또번호</li>
-        <li @click="$router.push({ name: 'Chat' })">AI심리상담</li>
-<!--        <li>메뉴</li>-->
+        <li @click="$router.push({ name: 'DreamInterpretation' })">AI 꿈해몽 |</li>
+        <li @click="$router.push({ name: 'Lotto' })">AI 로또번호 |</li>
+        <li @click="$router.push({ name: 'Chat' })">AI 심리상담 |</li>
+        <li @click="$router.push({ name: 'Mbti' })">AI MBTI 테스트</li>
       </ul>
     </div>
   </div>
@@ -26,7 +26,7 @@
 }
 .header_box {
     display: flex;
-    width: 350px;
+    width: 450px;
     height: 50px;
 }
 .header_ul {
@@ -60,6 +60,9 @@
     .logo {
         width: 40px;
         height: 40px;
+    }
+    .header_ul li {
+        font-size: 0.7rem;
     }
 }
 </style>

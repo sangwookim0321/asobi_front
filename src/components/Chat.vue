@@ -1,5 +1,5 @@
 <script setup>
-import {getCurrentInstance, ref, nextTick} from 'vue'
+import { getCurrentInstance, ref, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from "vue-router"
 import useApi from "@/commonJs/useApi.js"
 
@@ -16,13 +16,24 @@ const loader = ref('')
 
 const chat_model = ref('')
 const newMessage = ref('')
-const userMessages = ref([])
-const gptMessages = ref([])
 let messageId = 0
+const messages = ref([
+])
 
-const messages = ref([])
+const threadId = ref('')
 
-const item = ref({ content: '', role: '', threadId: '' })
+
+onMounted(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('beforeunload', handleBeforeUnload)
+})
+
+const handleBeforeUnload = (event) => {
+    threadDelete()
+}
 
 const start = () => {
     if (chat_model.value === '') {
@@ -31,14 +42,15 @@ const start = () => {
         return
     }
 
+    msg.value = ''
+    msgShow.value = false
     btnShow.value = true
 }
 
 const reset = () => {
     btnShow.value = false
     chat_model.value = ''
-    userMessages.value = []
-    gptMessages.value = []
+    messages.value = []
     messageId = 0
     newMessage.value = ''
     msgShow.value = false
@@ -49,9 +61,9 @@ const showLoading = () => {
     loader.value = proxy.$loading.show({
         container: proxy.$refs.loaderRef,
         zIndex: 9999,
-        width: 60,
-        height: 60,
-        loader: "bars",
+        width: 50,
+        height: 50,
+        loader: "dots",
         canCancel: false,
     })
 }
@@ -65,7 +77,20 @@ const scrollToBottom = () => {
     })
 }
 
-const sendMessage = async () => {
+const threadDelete = () => {
+    httpDelete(`${endPoints.GPT_THREAD_DELETE}?threadId=${threadId.value}`, 'Mbti', false, (res) => {
+        console.log(res)
+    }, (err) => {
+        console.log(err)
+    })
+}
+
+const sendMessage = () => {
+    if (success.value) {
+        msg.value = '응답이 도착할때까지 기다려주세요.'
+        msgShow.value = true
+        return
+    }
     if (newMessage.value.trim() !== '') {
         var messageContent = newMessage.value
         messages.value.push({ id: messageId++, content: newMessage.value, type: 'user' })
@@ -85,34 +110,41 @@ const sendMessage = async () => {
     const data = {
         prompt: messageContent,
         type: type,
+        threadId: threadId.value,
     }
 
     showLoading()
+    success.value = true
 
-    await httpPost(endPoints.GPT_CHAT_HELPER, 'Chat', data, false, (res) => {
+    httpPost(endPoints.GPT_CHAT_HELPER, 'Chat', data, false, (res) => {
         messages.value.push({ id: messageId++, content: res.data[0].content, type: 'gpt' })
+        threadId.value = res.data[0].threadId
         scrollToBottom()
+        msgShow.value = false
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
+        msgShow.value = true
     }, null, () => {
         loader.value.hide()
+        success.value = false
     })
 }
 </script>
 
 <template>
   <div class="container_absolute"></div>
-  <div class="container_dream">
-    <div class="dream_box_title">
+  <div class="container_chat">
+    <div class="chat_box_title">
       <label v-show="!btnShow">AI 에게 뭐든지 상담을 해보세요! <br/> 우선 AI 상담사를 골라볼까요?</label>
+      <label v-show="btnShow">상담사에게 인사 후 상담을 시작해보세요!</label>
     </div>
 
     <div v-show="!btnShow" class="chat_box_1">
 
       <div class="chat_model_box" @click="chat_model = '신지윤'">
         <div :style="chat_model === '신지윤' ? 'opacity: 0.8' : ''" class="chat_model_1">
-          <img class="chat_model_1_img" src="/public/imgs/MoneyverseStanding2.png" alt="img"/>
+          <img class="chat_model_1_img" src="/public/imgs/ai-model-img1.png" alt="img"/>
         </div>
         <div class="chat_model_span">
           <span :style="chat_model === '신지윤' ? 'color: #3DA46C;' : ''">AI 상담사 신지윤</span>
@@ -120,7 +152,7 @@ const sendMessage = async () => {
       </div>
       <div class="chat_model_box" @click="chat_model = '남도윤'">
         <div :style="chat_model === '남도윤' ? 'opacity: 0.8' : ''" class="chat_model_2">
-          <img class="chat_model_2_img" src="/public/imgs/MoneyverseStanding2.png" alt="img"/>
+          <img class="chat_model_2_img" src="/public/imgs/ai-model-img2.png" alt="img"/>
         </div>
         <div class="chat_model_span">
           <span :style="chat_model === '남도윤' ? 'color: #3DA46C;' : ''">AI 상담사 남도윤</span>
@@ -138,7 +170,7 @@ const sendMessage = async () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" src="/public/imgs/MoneyverseStanding2.png" alt="GPT">
+            <img class="profile-img" :src="chat_model === '신지윤' ? '/public/imgs/ai-model-img1.png' : '/public/imgs/ai-model-img2.png'" alt="GPT">
             <div class="message-details">
               <div class="gpt-name">AI 상담사 {{ chat_model }}</div>
               <div class="message-content">{{ msg.content }}</div>
@@ -147,16 +179,15 @@ const sendMessage = async () => {
         </div>
         <div style="margin-left: 50px" ref="loaderRef"></div>
       </div>
-      <div class="div_form">
+    </div>
+      <div class="div_form" v-show="btnShow">
         <input type="text" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage">
         <button class="chat_submit" @click="sendMessage">보내기</button>
       </div>
-    </div>
 
-    <button class="dream_button" v-show="!btnShow && !success" @click="start">선택 완료</button>
-    <button class="dream_button" v-show="btnShow" @click="reset">다시하기</button>
-    <div v-show="btnShow" ref="textareaRef"></div>
-    <p class="dream_p" v-show="msgShow">{{ msg }}</p>
+    <button class="chat_button" v-show="!btnShow && !success" @click="start">선택 완료</button>
+    <button class="chat_button" v-show="btnShow" @click="reset">다시하기</button>
+    <p class="chat_p" v-show="msgShow">{{ msg }}</p>
   </div>
 </template>
 
@@ -171,14 +202,14 @@ const sendMessage = async () => {
     background-repeat: no-repeat;
     background-size: cover;
 }
-.container_dream {
+.container_chat {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     margin-top: 20px;
 }
-.dream_box_title {
+.chat_box_title {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -197,8 +228,8 @@ const sendMessage = async () => {
     justify-content: center;
     align-items: center;
     width: 500px;
-    height: 500px;
     border-radius: 12px;
+    margin-top: 140px;
 }
 .chat_model_box {
     display: flex;
@@ -248,8 +279,8 @@ const sendMessage = async () => {
     width: 150px;
     height: 150px;
 }
-.dream_button {
-    margin-top: 8px;
+.chat_button {
+    margin-top: 50px;
     width: 120px;
     height: 35px;
     border: none;
@@ -263,7 +294,7 @@ const sendMessage = async () => {
     opacity: 0.6;
     transition: 0.5s ease-in-out;
 }
-.dream_button:hover {
+.chat_button:hover {
     opacity: 1;
     transition: 0.5s ease-in-out;
     background: #3DA46C;
@@ -277,15 +308,11 @@ div::-webkit-scrollbar {
 /* 스크롤바 트랙 (바탕) 스타일 */
 div::-webkit-scrollbar-track {
     background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
 }
 
 /* 스크롤바 핸들 (움직이는 부분) 스타일 */
 div::-webkit-scrollbar-thumb {
     background: #888; /* 스크롤바 핸들의 색상 */
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
 }
 
 /* 스크롤바 핸들을 호버할 때 스타일 */
@@ -293,7 +320,7 @@ div::-webkit-scrollbar-thumb:hover {
     background: #555; /* 호버 시 핸들의 색상 */
 }
 
-.dream_p {
+.chat_p {
     margin-top: 8px;
     font-family: Consolas, sans-serif;
     font-size: 0.8rem;
@@ -305,14 +332,17 @@ div::-webkit-scrollbar-thumb:hover {
     flex-direction: column;
     width: 500px;
     height: 500px;
-    border: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
     overflow-y: auto;
-    border-radius: 12px;
 }
 
 .messages {
     flex-grow: 1;
     padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .message {
@@ -329,8 +359,8 @@ div::-webkit-scrollbar-thumb:hover {
     padding: 5px 10px;
     border-radius: 10px;
     line-height: 1.2;
-    max-width: 80%; /* 최대 길이를 80%로 설정 */
-    word-wrap: break-word; /* 자동 줄바뀜 활성화 */
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
 .message-content {
@@ -341,11 +371,12 @@ div::-webkit-scrollbar-thumb:hover {
     background-color: #3DA46C;
     color: #fff;
     line-height: 1.2;
-    align-self: flex-start; /* GPT 메시지를 왼쪽 정렬 */
+    align-self: flex-start;
 }
 
 .gpt {
-    align-items: center;
+    display: flex;
+    flex-direction: row;
 }
 
 .gpt-name {
@@ -369,12 +400,13 @@ div::-webkit-scrollbar-thumb:hover {
     border-radius: 10px;
     background-color: #494949;
     color: #fff;
-    max-width: 80%; /* 최대 길이를 80%로 설정 */
-    word-wrap: break-word; /* 자동 줄바뀜 활성화 */
+    max-width: 80%;
+    word-wrap: break-word;
 }
 
 .div_form {
     display: flex;
+    width: 500px;
 }
 
 input[type="text"] {
@@ -404,27 +436,54 @@ input {
         width: 200px;
         height: 200px;
     }
-    .container_dream {
+    .container_chat {
         padding-top: 200px;
     }
     textarea {
         font-size: 0.9rem;
     }
-    .dream_box_title {
-        font-size: 1rem;
+    .chat_box_title {
+        font-size: 0.8rem;
     }
     .chat_box_1 {
         width: 200px;
         height: 200px;
+        margin-top: 12px;
     }
     .chat_box_2 {
-        width: 200px;
-        height: 200px;
+        width: 90%;
+        height: 300px;
     }
-    .dream_button {
+    .chat_button {
         bottom: 18%;
         width: 80px;
         height: 25px;
+        font-size: 0.8rem;
+    }
+    .chat_model_1:hover {
+        transform: scale(1.1, 1.1);
+        transition: 0.3s ease-in-out;
+        opacity: 0.8;
+    }
+    .chat_model_2:hover {
+        transform: scale(1.1, 1.1);
+        transition: 0.3s ease-in-out;
+        opacity: 0.8;
+    }
+    .chat_model_box {
+        margin: 0 10px;
+    }
+    .div_form {
+        display: flex;
+        width: 90%;
+    }
+    .gpt-name {
+        font-size: 0.7rem;
+    }
+    .message-content {
+        font-size: 0.7rem;
+    }
+    .chat_model_span {
         font-size: 0.8rem;
     }
 }

@@ -313,7 +313,7 @@ textarea::-webkit-scrollbar-thumb:hover {
     }
     .lotto_box_title {
         width: 80%;
-        font-size: 1rem;
+        font-size: 0.8rem;
         text-align: center;
     }
     .lotto_box {

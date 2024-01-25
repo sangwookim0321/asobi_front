@@ -213,7 +213,7 @@ textarea::-webkit-scrollbar-thumb:hover {
         font-size: 0.9rem;
     }
     .dream_box_title {
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
     .dream_box {
         width: 200px;

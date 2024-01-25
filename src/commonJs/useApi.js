@@ -30,6 +30,7 @@ const useApi = () => {
         GPT_HELPER: '/gpt-api/gpt-helper',
         GPT_THREAD_DELETE: '/gpt-api/gpt-thread',
         GPT_CHAT_HELPER: '/gpt-api/gpt-chat',
+        GPT_MBTI_HELPER: '/gpt-api/gpt-mbit-helper',
         TEST_API: '/gpt-api/test-api',
     }
 

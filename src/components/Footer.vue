@@ -4,13 +4,16 @@
 
 <template>
   <div class="container_footer">
-
+    <div class="footer_box">
+      <p class="footer_copyright_p">© 2024 Asobi. All rights reserved.</p>
+      <p class="footer_made_p">Made by Hady, pointjumpit@gmail.com</p>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .container_footer {
-    position: absolute;
+    position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,6 +21,27 @@
     height: 100px;
     bottom: 0;
     background: #FFBA53;
+}
+.footer_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 50px;
+}
+.footer_copyright_p {
+    font-family: Consolas, sans-serif;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #494949;
+}
+.footer_made_p {
+    font-family: Consolas, sans-serif;
+    font-weight: bold;
+    font-size: 0.7rem;
+    color: #494949;
+    margin-top: 8px;
 }
 
 @media (max-width: 768px) {
