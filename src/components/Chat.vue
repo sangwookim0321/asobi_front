@@ -358,7 +358,7 @@ div::-webkit-scrollbar-thumb:hover {
     color: #212121;
     padding: 5px 10px;
     border-radius: 10px;
-    line-height: 1.2;
+    line-height: 1.4;
     max-width: 80%;
     word-wrap: break-word;
 }
@@ -370,7 +370,7 @@ div::-webkit-scrollbar-thumb:hover {
 .gpt .message-content {
     background-color: #3DA46C;
     color: #fff;
-    line-height: 1.2;
+    line-height: 1.4;
     align-self: flex-start;
 }
 

@@ -12,7 +12,8 @@ const msgShow = ref(false)
 const btnShow = ref(false)
 const success = ref(false)
 const loader = ref('')
-const responseCount = ref(0)
+
+const responseEnd = ref(false)
 
 const chat_model = ref('')
 const newMessage = ref('')
@@ -56,7 +57,7 @@ const reset = () => {
     newMessage.value = ''
     msgShow.value = false
     msg.value = ''
-    responseCount.value = 0
+    responseEnd.value = false
     success.value = false
     threadId.value = ''
     onMounted(() => {
@@ -120,7 +121,14 @@ const sendMessage = () => {
         threadId.value = res.data[0].threadId
         scrollToBottom()
         msgShow.value = false
-        responseCount.value++
+
+        if (res.data[0].content.includes("테스트를 종료할게요!")) {
+            responseEnd.value = true
+
+            msg.value = '테스트가 완료되었습니다. 결과를 확인해보세요!'
+            msgShow.value = true
+            threadDelete()
+        }
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
@@ -128,11 +136,6 @@ const sendMessage = () => {
     }, null, () => {
         loader.value.hide()
         success.value = false
-        if (responseCount.value >= 10) {
-            msg.value = '테스트가 완료되었습니다. 결과를 확인해보세요!'
-            msgShow.value = true
-            threadDelete()
-        }
     })
 }
 
@@ -166,14 +169,14 @@ const sendMessage = () => {
         <div style="margin-left: 20px" ref="loaderRef"></div>
       </div>
     </div>
-    <div class="div_form" v-show="btnShow && responseCount !== 10">
-      <input type="text" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage" :disabled="responseCount >= 10">
-      <button class="mbti_submit" @click="sendMessage" :disabled="responseCount >= 10">보내기</button>
+    <div class="div_form" v-show="btnShow && !responseEnd">
+      <input type="text" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage" :disabled="responseEnd">
+      <button class="mbti_submit" @click="sendMessage" :disabled="responseEnd">보내기</button>
     </div>
 
     <button class="mbti_button" v-show="!btnShow" @click="start">시작하기</button>
-    <button class="mbti_button" v-show="responseCount >= 10" @click="reset">다시하기</button>
-    <p class="mbti_p" v-show="msgShow">{{ msg }}</p>
+    <button class="mbti_button" v-show="responseEnd" @click="reset">다시하기</button>
+    <p :style="msg === '테스트가 완료되었습니다. 결과를 확인해보세요!' ? 'color: #3DA46C;': ''" class="mbti_p" v-show="msgShow">{{ msg }}</p>
   </div>
 </template>
 
@@ -303,7 +306,7 @@ input {
     color: #212121;
     padding: 5px 10px;
     border-radius: 10px;
-    line-height: 1.2;
+    line-height: 1.4;
     max-width: 80%;
     word-wrap: break-word;
 }
@@ -315,7 +318,7 @@ input {
 .gpt .message-content {
     background-color: #D85ACB;
     color: #fff;
-    line-height: 1.2;
+    line-height: 1.4;
     align-self: flex-start;
 }
 
