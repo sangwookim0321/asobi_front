@@ -31,6 +31,7 @@ const useApi = () => {
         GPT_THREAD_DELETE: '/gpt-api/gpt-thread',
         GPT_CHAT_HELPER: '/gpt-api/gpt-chat',
         GPT_MBTI_HELPER: '/gpt-api/gpt-mbit-helper',
+        GTP_KADAN_AI: '/gpt-api/beta-kadan-ai',
         TEST_API: '/gpt-api/test-api',
     }
 

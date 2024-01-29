@@ -6,7 +6,7 @@
   <div class="container_header">
     <div class="header_box">
       <ul class="header_ul">
-        <li>
+        <li @click="$router.push({ name: 'Main' })">
           <img class="logo" src="/public/imgs/asobi_logo.png" alt="logo">
         </li>
         <li @click="$router.push({ name: 'DreamInterpretation' })">AI 꿈해몽 |</li>

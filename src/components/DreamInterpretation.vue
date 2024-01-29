@@ -77,6 +77,7 @@ const reset = () => {
     prompt.value = ''
     item.value = { content: '', role: '', threadId: '' }
     success.value = false
+    threadDelete()
 }
 </script>
 
@@ -86,7 +87,7 @@ const reset = () => {
     <div class="dream_box_title">
       <label>당신의 꿈을 해몽해드릴게요!</label>
     </div>
-    <textarea class="dream_box" placeholder="꿈 내용을 입력해 주세요." :style="success ? 'color: #3DA46C' : ''" :disabled="success" v-model="prompt"></textarea>
+    <textarea class="dream_box" placeholder="꿈 내용을 최대 600자로 입력해 주세요." maxlength="600" :style="success ? 'color: #3DA46C' : ''" :disabled="success" v-model="prompt"></textarea>
     <button class="dream_button" v-show="!btnShow && !success" @click="start">해몽 시작</button>
     <button class="dream_button" v-show="success" @click="reset">다시하기</button>
     <div v-show="btnShow" ref="textareaRef"></div>

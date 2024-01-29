@@ -13,8 +13,6 @@ const btnShow = ref(false)
 const success = ref(false)
 const loader = ref('')
 
-const responseEnd = ref(false)
-
 const chat_model = ref('')
 const newMessage = ref('')
 let messageId = 0
@@ -27,7 +25,7 @@ watch(() => btnShow.value, (val) => {
     if (val) {
         showLoading()
         setTimeout(() => {
-            messages.value.push({ id: messageId++, content: '안녕하세요! AI 아소비 입니다. \n\n당신의 MBTI 를 테스트 해볼까요? 제가 드리는 질문 10가지에 대답을 하면 되요! 준비되면 시작한다고 말해주세요~!', type: 'gpt' })
+            messages.value.push({ id: messageId++, content: '당신의 이름을 알려주십쇼.', type: 'gpt' })
             loader.value.hide()
         }, 1500)
     }
@@ -57,12 +55,11 @@ const reset = () => {
     newMessage.value = ''
     msgShow.value = false
     msg.value = ''
-    responseEnd.value = false
     success.value = false
     threadId.value = ''
     threadDelete()
     onMounted(() => {
-        messages.value.push({ id: messageId++, content: '안녕하세요! AI 아소비 입니다. \n\n당신의 MBTI 를 테스트 해볼까요? 제가 드리는 질문 10가지에 대답을 하면 되요! 준비되면 시작한다고 말해주세요~!', type: 'gpt' })
+        messages.value.push({ id: messageId++, content: '당신의 이름을 알려주십쇼.', type: 'gpt' })
     })
 }
 
@@ -117,19 +114,12 @@ const sendMessage = () => {
     showLoading()
     success.value = true
 
-    httpPost(endPoints.GPT_MBTI_HELPER, 'Mbti', data, false, (res) => {
+    httpPost(endPoints.GTP_KADAN_AI, 'Beta', data, false, (res) => {
         messages.value.push({ id: messageId++, content: res.data[0].content, type: 'gpt' })
         threadId.value = res.data[0].threadId
         scrollToBottom()
         msgShow.value = false
 
-        if (res.data[0].content.includes("테스트를 종료할게요!")) {
-            responseEnd.value = true
-
-            msg.value = '테스트가 완료되었습니다. 결과를 확인해보세요!'
-            msgShow.value = true
-            threadDelete()
-        }
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
@@ -143,14 +133,14 @@ const sendMessage = () => {
 </script>
 
 <template>
-  <div class="container_absolute"></div>
+<!--  <div class="container_absolute"></div>-->
   <div class="container_mbti">
     <div class="mbti_box_title">
-      <label v-show="!btnShow">AI 가 당신의 MBTI 를 테스트합니다! <br/> 시작해볼까요?</label>
-      <label style="color: #FFBA53" v-show="btnShow">AI 에게 일정 횟수 이상 답변과 관계없는 답을 할 경우 <br/> 테스트가 임의로 종료되니 주의 바랍니다!</label>
+      <label v-show="!btnShow">위대한 AI 카단과 <br/> 대화를 시작해볼까요?</label>
+      <label style="color: #FFBA53" v-show="btnShow">AI 카단은 무엇이든 가능합니다! <br/> 대화를 시작해보세요.</label>
     </div>
-    <img v-show="!btnShow" class="mbti_avata_img" src="/public/imgs/asobi_avata.png" alt="avata"/>
-    <span v-show="!btnShow" class="mbti_avata_name">AI 아소비</span>
+    <img v-show="!btnShow" class="mbti_avata_img" src="/imgs/kadan.png" alt="avata"/>
+    <span v-show="!btnShow" class="mbti_avata_name">AI 카단</span>
     <div v-show="btnShow" class="mbti_box">
       <div class="messages">
         <div v-for="msg in messages" :key="msg.id" :class="['message', msg.type]">
@@ -160,9 +150,9 @@ const sendMessage = () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" src="/public/imgs/asobi_avata.png" alt="GPT">
+            <img class="profile-img" src="/public/imgs/kadan.png" alt="GPT">
             <div class="message-details">
-              <div class="gpt-name">AI 아소비 {{ chat_model }}</div>
+              <div class="gpt-name">AI 카단 {{ chat_model }}</div>
               <div class="message-content">{{ msg.content }}</div>
             </div>
           </template>
@@ -170,14 +160,14 @@ const sendMessage = () => {
         <div style="margin-left: 20px" ref="loaderRef"></div>
       </div>
     </div>
-    <div class="div_form" v-show="btnShow && !responseEnd">
-      <input type="text" maxlength="100" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage" :disabled="responseEnd">
-      <button class="mbti_submit" @click="sendMessage" :disabled="responseEnd">보내기</button>
+    <div class="div_form" v-show="btnShow">
+      <input type="text" maxlength="100" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage">
+      <button class="mbti_submit" @click="sendMessage">보내기</button>
     </div>
 
     <button class="mbti_button" v-show="!btnShow" @click="start">시작하기</button>
-    <button class="mbti_button" v-show="responseEnd" @click="reset">다시하기</button>
-    <p :style="msg === '테스트가 완료되었습니다. 결과를 확인해보세요!' ? 'color: #3DA46C;': ''" class="mbti_p" v-show="msgShow">{{ msg }}</p>
+    <button class="mbti_button" v-show="btnShow" @click="reset">다시하기</button>
+    <p class="mbti_p" v-show="msgShow">{{ msg }}</p>
   </div>
 </template>
 
@@ -188,9 +178,6 @@ const sendMessage = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/MoneyverseStanding3.png");
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 .container_mbti {
     display: flex;
@@ -200,8 +187,8 @@ const sendMessage = () => {
     margin-top: 20px;
 }
 .mbti_avata_img {
-    width: 200px;
-    height: 200px;
+    width: 80px;
+    height: 100px;
     border-radius: 50%;
     margin-top: 100px;
 }
@@ -244,7 +231,7 @@ const sendMessage = () => {
 .mbti_button:hover {
     opacity: 1;
     transition: 0.5s ease-in-out;
-    background: #3DA46C;
+    background: #4b4b4b;
 }
 .mbti_box {
     display: flex;
@@ -279,13 +266,10 @@ input {
 
 .mbti_submit {
     padding: 5px 10px;
-    background: #D85ACB;
+    background: #4b4b4b;
     border: none;
     color: #fff;
     cursor: pointer;
-}
-.mbti_submit:hover {
-    background: #be4eb3;
 }
 .messages {
     flex-grow: 1;
@@ -310,6 +294,7 @@ input {
     line-height: 1.4;
     max-width: 80%;
     word-wrap: break-word;
+    align-self: flex-end;
 }
 
 .message-content {
@@ -317,7 +302,7 @@ input {
 }
 
 .gpt .message-content {
-    background-color: #D85ACB;
+    background-color: #4b4b4b;
     color: #fff;
     line-height: 1.4;
     align-self: flex-start;
@@ -335,7 +320,7 @@ input {
 }
 
 .gpt .profile-img {
-    width: 50px;
+    width: 40px;
     height: 50px;
     border-radius: 50%;
     background: #494949;
@@ -381,9 +366,6 @@ div::-webkit-scrollbar-thumb:hover {
         left: 20%;
         width: 200px;
         height: 200px;
-    }
-    .container_mbti {
-        padding-top: 150px;
     }
     .mbti_avata_img {
         width: 100px;

@@ -55,6 +55,7 @@ const reset = () => {
     newMessage.value = ''
     msgShow.value = false
     msg.value = ''
+    threadDelete()
 }
 
 const showLoading = () => {
@@ -181,7 +182,7 @@ const sendMessage = () => {
       </div>
     </div>
       <div class="div_form" v-show="btnShow">
-        <input type="text" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage">
+        <input type="text" maxlength="100" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage">
         <button class="chat_submit" @click="sendMessage">보내기</button>
       </div>
 

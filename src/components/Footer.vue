@@ -7,6 +7,7 @@
     <div class="footer_box">
       <p class="footer_copyright_p">© 2024 Asobi. All rights reserved.</p>
       <p class="footer_made_p">Made by Hady, pointjumpit@gmail.com</p>
+      <p @click="$router.push({ name: 'Beta' })" style="position: absolute; bottom: 0; color: #FFBA53">beta</p>
     </div>
   </div>
 </template>

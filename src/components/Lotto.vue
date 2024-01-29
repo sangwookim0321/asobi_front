@@ -139,6 +139,7 @@ const reset = () => {
     item.value = { content: [], role: '', threadId: '' }
     success.value = false
     msgShow.value = false
+    threadDelete()
 }
 </script>
 

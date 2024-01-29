@@ -13,8 +13,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  server: {
-    host: '0.0.0.0',
-    port: 5173, // 원하는 포트 번호
-  }
+  // server: {
+  //   host: '0.0.0.0',
+  //   port: 5173, // 원하는 포트 번호
+  // }
 })
