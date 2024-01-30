@@ -58,8 +58,8 @@
         justify-content: space-evenly;
     }
     .logo {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
     .header_ul li {
         font-size: 0.7rem;

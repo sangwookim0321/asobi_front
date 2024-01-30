@@ -152,7 +152,7 @@ const reset = () => {
       <label>1 ~ 현재까지의 회차 번호를 학습한 AI가 로또번호를 추천 해줍니다!</label>
     </div>
     <div class="lotto_box">
-      <canvas v-show="item.content.length === 0" id="lottoCanvas"></canvas> <!-- 캔버스 추가 -->
+      <canvas style="border: 1px solid #494949" v-show="item.content.length === 0" id="lottoCanvas"></canvas> <!-- 캔버스 추가 -->
       <div v-show="item.content.length > 0" class="numbers-container">
         <div :style="index === item.content.length - 1 ? 'color: #ab74e1; font-weight: bold' : ''" v-for="(number, index) in item.content" :key="index" class="number-circle">
           <span v-if="index === item.content.length - 1">+</span>
@@ -322,9 +322,10 @@ textarea::-webkit-scrollbar-thumb:hover {
         height: 200px;
     }
     .lotto_button {
+        margin-top: 18px;
         bottom: 18%;
-        width: 80px;
-        height: 25px;
+        width: 100px;
+        height: 35px;
         font-size: 0.8rem;
     }
     .lotto_p {

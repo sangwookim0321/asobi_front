@@ -400,6 +400,9 @@ div::-webkit-scrollbar-thumb:hover {
         font-size: 0.8rem;
     }
     .mbti_button {
+        width: 100px;
+        height: 35px;
+        font-size: 0.8rem;
     }
     .mbti_box {
         width: 90%;

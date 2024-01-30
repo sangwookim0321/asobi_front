@@ -223,8 +223,8 @@ textarea::-webkit-scrollbar-thumb:hover {
     }
     .dream_button {
         bottom: 18%;
-        width: 80px;
-        height: 25px;
+        width: 100px;
+        height: 35px;
         font-size: 0.8rem;
     }
 }
