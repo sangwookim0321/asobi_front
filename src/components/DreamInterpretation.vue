@@ -98,7 +98,7 @@ const reset = () => {
 <style scoped>
 .container_absolute {
     position: absolute;
-    top: 30%;
+    top: 40%;
     left: 5%;
     width: 400px;
     height: 400px;
@@ -111,7 +111,6 @@ const reset = () => {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
 }
 .dream_box_title {
     display: flex;

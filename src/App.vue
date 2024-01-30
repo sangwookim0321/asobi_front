@@ -19,25 +19,27 @@ watchEffect(() => {
     <div class="main-content">
       <router-view/>
     </div>
-    <Footer/>
   </div>
+    <Footer/>
 </template>
 
 <style>
 .app {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* 전체 화면 높이 */
+    min-height: 100vh;
     width: 100%;
-    max-width: 1440px; /* 최대 너비 설정 */
-    margin: 0 auto; /* 중앙 정렬 */
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .main-content {
-    flex: 1; /* 남은 공간 모두 사용 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
 }
 
 @media (max-width: 768px) {
-    /* 모바일 환경에서의 추가적인 스타일링 */
 }
 </style>

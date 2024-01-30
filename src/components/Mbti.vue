@@ -189,7 +189,7 @@ const sendMessage = () => {
 <style scoped>
 .container_absolute {
     position: absolute;
-    top: 30%;
+    top: 40%;
     left: 5%;
     width: 400px;
     height: 400px;
@@ -202,13 +202,11 @@ const sendMessage = () => {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
 }
 .mbti_avata_img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    margin-top: 100px;
 }
 .mbti_avata_name {
     font-family: Consolas, sans-serif;
@@ -393,7 +391,6 @@ div::-webkit-scrollbar-thumb:hover {
     .mbti_avata_img {
         width: 100px;
         height: 100px;
-        margin-top: 50px;
     }
     .mbti_avata_name {
         font-size: 1rem;
