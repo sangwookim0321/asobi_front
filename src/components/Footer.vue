@@ -20,6 +20,7 @@
     width: 100%;
     height: 100px;
     background: #FFBA53;
+    margin-top: 30px;
 }
 .footer_box {
     display: flex;
