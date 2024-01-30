@@ -9,6 +9,10 @@ import Beta from '../components/Beta.vue'
 
 const routes = [
     {
+        path: '/:catchAll(.*)',
+        redirect: '/',
+    },
+    {
         path: '/',
         name: 'Main',
         component: Main

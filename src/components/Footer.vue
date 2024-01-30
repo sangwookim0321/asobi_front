@@ -14,7 +14,7 @@
 
 <style scoped>
 .container_footer {
-    position: fixed;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -150,6 +150,7 @@ textarea {
 }
 .dream_button {
     margin-top: 8px;
+    margin-bottom: 30px;
     width: 120px;
     height: 35px;
     border: none;
