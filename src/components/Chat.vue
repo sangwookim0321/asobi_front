@@ -92,6 +92,11 @@ const sendMessage = () => {
         msgShow.value = true
         return
     }
+    if (newMessage.value.trim() === '') {
+        msg.value = '메시지를 입력해주세요.'
+        msgShow.value = true
+        return
+    }
     if (newMessage.value.trim() !== '') {
         var messageContent = newMessage.value
         messages.value.push({ id: messageId++, content: newMessage.value, type: 'user' })
@@ -187,8 +192,8 @@ const sendMessage = () => {
       </div>
 
     <button class="chat_button" v-show="!btnShow && !success" @click="start">선택 완료</button>
-    <button class="chat_button" v-show="btnShow" @click="reset">다시하기</button>
     <p class="chat_p" v-show="msgShow">{{ msg }}</p>
+    <button class="chat_button" v-show="btnShow" @click="reset">다시하기</button>
   </div>
 </template>
 
@@ -281,7 +286,7 @@ const sendMessage = () => {
     height: 150px;
 }
 .chat_button {
-    margin-top: 50px;
+    margin-top: 30px;
     width: 120px;
     height: 35px;
     border: none;

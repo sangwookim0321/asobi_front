@@ -100,6 +100,11 @@ const sendMessage = () => {
         msgShow.value = true
         return
     }
+    if (newMessage.value.trim() === '') {
+        msg.value = '메시지를 입력해주세요.'
+        msgShow.value = true
+        return
+    }
     if (newMessage.value.trim() !== '') {
         var messageContent = newMessage.value
         messages.value.push({ id: messageId++, content: newMessage.value, type: 'user' })
@@ -176,8 +181,8 @@ const sendMessage = () => {
     </div>
 
     <button class="mbti_button" v-show="!btnShow" @click="start">시작하기</button>
-    <button class="mbti_button" v-show="responseEnd" @click="reset">다시하기</button>
     <p :style="msg === '테스트가 완료되었습니다. 결과를 확인해보세요!' ? 'color: #3DA46C;': ''" class="mbti_p" v-show="msgShow">{{ msg }}</p>
+    <button class="mbti_button" v-show="responseEnd" @click="reset">다시하기</button>
   </div>
 </template>
 
@@ -227,7 +232,7 @@ const sendMessage = () => {
     margin-bottom: 30px;
 }
 .mbti_button {
-    margin-top: 50px;
+    margin-top: 30px;
     width: 120px;
     height: 35px;
     border: none;

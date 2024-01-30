@@ -150,7 +150,6 @@ textarea {
 }
 .dream_button {
     margin-top: 8px;
-    margin-bottom: 30px;
     width: 120px;
     height: 35px;
     border: none;
@@ -222,7 +221,6 @@ textarea::-webkit-scrollbar-thumb:hover {
         height: 200px;
     }
     .dream_button {
-        bottom: 18%;
         width: 100px;
         height: 35px;
         font-size: 0.8rem;

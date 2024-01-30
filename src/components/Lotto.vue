@@ -143,8 +143,6 @@ const reset = () => {
 }
 </script>
 
-
-
 <template>
   <div class="container_absolute"></div>
   <div class="container_lotto">

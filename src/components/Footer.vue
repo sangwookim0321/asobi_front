@@ -7,20 +7,18 @@
     <div class="footer_box">
       <p class="footer_copyright_p">© 2024 Asobi. All rights reserved.</p>
       <p class="footer_made_p">Made by Hady, pointjumpit@gmail.com</p>
-      <p @click="$router.push({ name: 'Beta' })" style="position: absolute; bottom: 0; color: #FFBA53">beta</p>
+      <!--      <p @click="$router.push({ name: 'Beta' })" style="position: absolute; bottom: 0; color: #FFBA53">beta</p>-->
     </div>
   </div>
 </template>
 
 <style scoped>
 .container_footer {
-    position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100px;
-    bottom: 0;
     background: #FFBA53;
 }
 .footer_box {
@@ -28,7 +26,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 450px;
     height: 50px;
 }
 .footer_copyright_p {
