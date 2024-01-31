@@ -223,6 +223,7 @@ textarea::-webkit-scrollbar-thumb:hover {
         width: 100px;
         height: 35px;
         font-size: 0.8rem;
+        margin-bottom: 20px;
     }
 }
 </style>

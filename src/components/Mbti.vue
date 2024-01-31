@@ -18,10 +18,20 @@ const responseEnd = ref(false)
 const chat_model = ref('')
 const newMessage = ref('')
 let messageId = 0
-const messages = ref([
-])
+const messages = ref([])
 
 const threadId = ref('')
+
+// const testApi = async () => {
+//     await httpPost(endPoints.TEST_API, 'Mbti', {}, false, (res) => {
+//         console.log(res)
+//     }, (err) => {
+//         console.log(err)
+//     }, null, () => {
+//     })
+// }
+//
+// testApi()
 
 watch(() => btnShow.value, (val) => {
     if (val) {
@@ -121,12 +131,12 @@ const sendMessage = () => {
 
     showLoading()
     success.value = true
+    msgShow.value = false
 
     httpPost(endPoints.GPT_MBTI_HELPER, 'Mbti', data, false, (res) => {
         messages.value.push({ id: messageId++, content: res.data[0].content, type: 'gpt' })
         threadId.value = res.data[0].threadId
         scrollToBottom()
-        msgShow.value = false
 
         if (res.data[0].content.includes("테스트를 종료할게요!")) {
             responseEnd.value = true
@@ -175,7 +185,7 @@ const sendMessage = () => {
         <div style="margin-left: 20px" ref="loaderRef"></div>
       </div>
     </div>
-    <div class="div_form" :style="!msgShow ? 'margin-bottom: 10px' : ''" v-show="btnShow && !responseEnd">
+    <div class="div_form" :style="!msgShow ? 'margin-bottom: 20px' : ''" v-show="btnShow && !responseEnd">
       <input type="text" maxlength="100" v-model="newMessage" placeholder="메시지 입력..." @keyup.enter="sendMessage" :disabled="responseEnd">
       <button class="mbti_submit" @click="sendMessage" :disabled="responseEnd">보내기</button>
     </div>

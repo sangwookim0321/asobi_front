@@ -460,10 +460,10 @@ input {
         height: 300px;
     }
     .chat_button {
-        bottom: 18%;
         width: 100px;
         height: 35px;
         font-size: 0.8rem;
+        margin-bottom: 20px;
     }
     .chat_model_1:hover {
         transform: scale(1.1, 1.1);
