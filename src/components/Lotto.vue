@@ -83,6 +83,22 @@ onMounted(() => {
 })
 
 const start = () => {
+    const today = new Date().toISOString().split('T')[0] // 현재 날짜를 'YYYY-MM-DD' 형식으로 가져옴
+    const storedData = JSON.parse(localStorage.getItem('lottoApiCount') || '{"date": "", "count": 0}') // 로컬 스토리지에 저장된 API 호출 횟수를 가져옴
+
+    if (storedData.date === today && storedData.count >= 1) {
+        // 오늘 날짜에 이미 2회 이상 API를 호출했다면 메시지를 표시하고 함수를 종료
+        msg.value = '로또번호 추천 서비스는 하루 1회만 이용 가능합니다.'
+        msgShow.value = true
+        return
+    }
+
+    if (storedData.date !== today) {
+        // 날짜가 변경되었다면 카운트를 초기화
+        storedData.date = today
+        storedData.count = 0
+    }
+
     msg.value = '10초~1분 이상의 시간이 소요됩니다. 잠시만 기다려주세요.'
     msgShow.value = true
     btnShow.value = true
@@ -103,6 +119,11 @@ const start = () => {
         success.value = true
         loader.value.hide()
         msg.value = '추천 번호가 나왔어요! 1등 당첨을 기원합니다.'
+
+        // API 호출 성공 시 카운트를 증가시키고 로컬 스토리지에 저장
+        storedData.count += 1
+        localStorage.setItem('lottoApiCount', JSON.stringify(storedData))
+
         threadDelete()
     }, (err) => {
         console.log(err)

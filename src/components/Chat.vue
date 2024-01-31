@@ -87,6 +87,22 @@ const threadDelete = () => {
 }
 
 const sendMessage = () => {
+    const today = new Date().toISOString().split('T')[0] // 현재 날짜를 'YYYY-MM-DD' 형식으로 가져옴
+    const storedData = JSON.parse(localStorage.getItem('chatApiCount') || '{"date": "", "count": 0}') // 로컬 스토리지에 저장된 API 호출 횟수를 가져옴
+
+    if (storedData.date === today && storedData.count >= 30) {
+        // 오늘 날짜에 이미 2회 이상 API를 호출했다면 메시지를 표시하고 함수를 종료
+        msg.value = '심리&고민 상담 서비스는 하루 30회만 이용 가능합니다.'
+        msgShow.value = true
+        return
+    }
+
+    if (storedData.date !== today) {
+        // 날짜가 변경되었다면 카운트를 초기화
+        storedData.date = today
+        storedData.count = 0
+    }
+
     if (success.value) {
         msg.value = '응답이 도착할때까지 기다려주세요.'
         msgShow.value = true
@@ -127,6 +143,10 @@ const sendMessage = () => {
         threadId.value = res.data[0].threadId
         scrollToBottom()
         msgShow.value = false
+
+        // API 호출 성공 시 카운트를 증가시키고 로컬 스토리지에 저장
+        storedData.count += 1
+        localStorage.setItem('chatApiCount', JSON.stringify(storedData))
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
@@ -176,10 +196,12 @@ const sendMessage = () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" :src="chat_model === '신지윤' ? '/imgs/ai-model-img1.png' : '/imgs/ai-model-img2.png'" alt="GPT">
-            <div class="message-details">
-              <div class="gpt-name">AI 상담사 {{ chat_model }}</div>
-              <div class="message-content">{{ msg.content }}</div>
+            <div class="message-details gpt">
+              <img class="profile-img" :src="chat_model === '신지윤' ? '/imgs/ai-model-img1.png' : '/imgs/ai-model-img2.png'" alt="GPT">
+              <div class="gpt-info">
+                <div class="gpt-name">AI 상담사 {{ chat_model }}</div>
+                <div class="message-content">{{ msg.content }}</div>
+              </div>
             </div>
           </template>
         </div>
@@ -352,8 +374,7 @@ div::-webkit-scrollbar-thumb:hover {
 
 .message {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
+    justify-content: flex-end; /* 기본적으로 메시지를 우측에 정렬 */
     width: 100%;
     padding: 4px;
 }
@@ -380,11 +401,11 @@ div::-webkit-scrollbar-thumb:hover {
 }
 
 .gpt {
-    display: flex;
-    flex-direction: row;
+    justify-content: flex-start;
 }
 
 .gpt-name {
+    font-size: 0.8rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -393,18 +414,25 @@ div::-webkit-scrollbar-thumb:hover {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: #494949;
 }
 
-.gpt .message-details {
-    margin-left: 10px;
+.message-details.gpt {
+    display: flex;
+    align-items: center;
+}
+
+.gpt-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px; /* 이미지와 텍스트 사이의 간격 */
 }
 
 .message-content {
+    background-color: #3DA46C;
+    color: #fff;
     padding: 5px 10px;
     border-radius: 10px;
-    background-color: #494949;
-    color: #fff;
+    line-height: 1.4;
     max-width: 80%;
     word-wrap: break-word;
 }

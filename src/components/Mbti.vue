@@ -105,6 +105,20 @@ const threadDelete = () => {
 }
 
 const sendMessage = () => {
+    const today = new Date().toISOString().split('T')[0]; // 현재 날짜를 'YYYY-MM-DD' 형식으로 가져옵니다.
+    let storedData = JSON.parse(localStorage.getItem('mbtiApiCount') || '{"date": "", "responseCount": 0, "testCompleteCount": 0}');
+
+    if (storedData.date !== today) {
+        // 날짜가 변경되었다면 카운트를 초기화합니다.
+        storedData = { date: today, responseCount: 0, testCompleteCount: 0 }
+    }
+
+    if (storedData.responseCount >= 30) {
+        msg.value = 'MBTI 테스트 메세지는 하루 30회 까지만 이용 가능합니다.'
+        msgShow.value = true
+        return
+    }
+
     if (success.value) {
         msg.value = '응답이 도착할때까지 기다려주세요.'
         msgShow.value = true
@@ -115,36 +129,45 @@ const sendMessage = () => {
         msgShow.value = true
         return
     }
-    if (newMessage.value.trim() !== '') {
-        var messageContent = newMessage.value
-        messages.value.push({ id: messageId++, content: newMessage.value, type: 'user' })
-        newMessage.value = ''
-        scrollToBottom()
-    }
 
+    var messageContent = newMessage.value.trim()
+    messages.value.push({ id: messageId++, content: messageContent, type: 'user' })
     newMessage.value = ''
+    scrollToBottom()
+
+    showLoading()
+    success.value = true
+    msgShow.value = false
 
     const data = {
         prompt: messageContent,
         threadId: threadId.value,
     }
 
-    showLoading()
-    success.value = true
-    msgShow.value = false
-
     httpPost(endPoints.GPT_MBTI_HELPER, 'Mbti', data, false, (res) => {
         messages.value.push({ id: messageId++, content: res.data[0].content, type: 'gpt' })
         threadId.value = res.data[0].threadId
         scrollToBottom()
 
-        if (res.data[0].content.includes("테스트를 종료할게요!")) {
-            responseEnd.value = true
+        storedData.responseCount += 1
 
+        if (res.data[0].content.includes("테스트를 종료할게요!")) {
+            if (storedData.testCompleteCount >= 3) {
+                msg.value = 'MBTI 테스트는 하루 3회 까지만 이용 가능합니다.'
+                msgShow.value = true
+                loader.value.hide()
+                success.value = false
+                return
+            }
+
+            storedData.testCompleteCount += 1 // 테스트 완료 카운트 증가
+            responseEnd.value = true
             msg.value = '테스트가 완료되었습니다. 결과를 확인해보세요!'
             msgShow.value = true
             threadDelete()
         }
+
+        localStorage.setItem('apiLimits', JSON.stringify(storedData))
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
