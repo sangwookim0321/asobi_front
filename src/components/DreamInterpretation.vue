@@ -102,7 +102,7 @@ const reset = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/MoneyverseStanding.png");
+    background-image: url("/imgs/MoneyverseStanding.png");
     background-repeat: no-repeat;
     background-size: cover;
 }

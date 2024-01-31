@@ -5,25 +5,25 @@
 <template>
   <div class="container">
     <div class="box" @click="$router.push({ name: 'DreamInterpretation' })">
-      <img class="box_img" src="/public/imgs/MoneyverseStanding.png" alt="img"/>
+      <img class="box_img" src="/imgs/MoneyverseStanding.png" alt="img"/>
       <div class="box_span">
         <span>AI 꿈 해몽 서비스</span>
       </div>
     </div>
     <div class="box" @click="$router.push({ name: 'Lotto' })">
-      <img class="box_img" src="/public/imgs/moneyverse.png" alt="img"/>
+      <img class="box_img" src="/imgs/moneyverse.png" alt="img"/>
       <div class="box_span">
         <span>AI 로또번호 추천 서비스</span>
       </div>
     </div>
     <div class="box" @click="$router.push({ name: 'Chat' })">
-      <img class="box_img" src="/public/imgs/MoneyverseStanding2.png" alt="img"/>
+      <img class="box_img" src="/imgs/MoneyverseStanding2.png" alt="img"/>
       <div class="box_span">
         <span>AI 심리 - 고민 상담 서비스</span>
       </div>
     </div>
     <div class="box" @click="$router.push({ name: 'Mbti' })">
-      <img class="box_img" src="/public/imgs/MoneyverseStanding3.png" alt="img"/>
+      <img class="box_img" src="/imgs/MoneyverseStanding3.png" alt="img"/>
       <div class="box_span">
         <span>AI MBTI 테스트 서비스</span>
       </div>

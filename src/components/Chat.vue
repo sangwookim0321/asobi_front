@@ -150,7 +150,7 @@ const sendMessage = () => {
 
       <div class="chat_model_box" @click="chat_model = '신지윤'">
         <div :style="chat_model === '신지윤' ? 'opacity: 0.8' : ''" class="chat_model_1">
-          <img class="chat_model_1_img" src="/public/imgs/ai-model-img1.png" alt="img"/>
+          <img class="chat_model_1_img" src="/imgs/ai-model-img1.png" alt="img"/>
         </div>
         <div class="chat_model_span">
           <span :style="chat_model === '신지윤' ? 'color: #3DA46C;' : ''">AI 상담사 신지윤</span>
@@ -158,7 +158,7 @@ const sendMessage = () => {
       </div>
       <div class="chat_model_box" @click="chat_model = '남도윤'">
         <div :style="chat_model === '남도윤' ? 'opacity: 0.8' : ''" class="chat_model_2">
-          <img class="chat_model_2_img" src="/public/imgs/ai-model-img2.png" alt="img"/>
+          <img class="chat_model_2_img" src="/imgs/ai-model-img2.png" alt="img"/>
         </div>
         <div class="chat_model_span">
           <span :style="chat_model === '남도윤' ? 'color: #3DA46C;' : ''">AI 상담사 남도윤</span>
@@ -176,7 +176,7 @@ const sendMessage = () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" :src="chat_model === '신지윤' ? '/public/imgs/ai-model-img1.png' : '/public/imgs/ai-model-img2.png'" alt="GPT">
+            <img class="profile-img" :src="chat_model === '신지윤' ? '/imgs/ai-model-img1.png' : '/imgs/ai-model-img2.png'" alt="GPT">
             <div class="message-details">
               <div class="gpt-name">AI 상담사 {{ chat_model }}</div>
               <div class="message-content">{{ msg.content }}</div>
@@ -204,7 +204,7 @@ const sendMessage = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/MoneyverseStanding2.png");
+    background-image: url("/imgs/MoneyverseStanding2.png");
     background-repeat: no-repeat;
     background-size: cover;
 }

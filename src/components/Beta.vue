@@ -150,7 +150,7 @@ const sendMessage = () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" src="/public/imgs/kadan.png" alt="GPT">
+            <img class="profile-img" src="/imgs/kadan.png" alt="GPT">
             <div class="message-details">
               <div class="gpt-name">AI 카단 {{ chat_model }}</div>
               <div class="message-content">{{ msg.content }}</div>

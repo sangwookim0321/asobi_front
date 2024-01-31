@@ -164,7 +164,7 @@ const sendMessage = () => {
       <label v-show="!btnShow">AI 가 당신의 MBTI 를 테스트합니다! <br/> 시작해볼까요?</label>
       <label style="color: #FFBA53" v-show="btnShow">AI 에게 일정 횟수 이상 답변과 관계없는 답을 할 경우 <br/> 테스트가 임의로 종료되니 주의 바랍니다!</label>
     </div>
-    <img v-show="!btnShow" class="mbti_avata_img" src="/public/imgs/asobi_avata.png" alt="avata"/>
+    <img v-show="!btnShow" class="mbti_avata_img" src="/imgs/asobi_avata.png" alt="avata"/>
     <span v-show="!btnShow" class="mbti_avata_name">AI 아소비</span>
     <div v-show="btnShow" class="mbti_box">
       <div class="messages">
@@ -175,7 +175,7 @@ const sendMessage = () => {
           </template>
           <template v-else>
             <!-- GPT 응답 메시지 -->
-            <img class="profile-img" src="/public/imgs/asobi_avata.png" alt="GPT">
+            <img class="profile-img" src="/imgs/asobi_avata.png" alt="GPT">
             <div class="message-details">
               <div class="gpt-name">AI 아소비 {{ chat_model }}</div>
               <div class="message-content">{{ msg.content }}</div>
@@ -203,7 +203,7 @@ const sendMessage = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/MoneyverseStanding3.png");
+    background-image: url("/imgs/MoneyverseStanding3.png");
     background-repeat: no-repeat;
     background-size: cover;
 }

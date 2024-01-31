@@ -173,7 +173,7 @@ const reset = () => {
     left: 5%;
     width: 400px;
     height: 400px;
-    background-image: url("/public/imgs/moneyverse.png");
+    background-image: url("/imgs/moneyverse.png");
     background-repeat: no-repeat;
     background-size: cover;
 }
