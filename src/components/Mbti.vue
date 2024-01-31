@@ -452,5 +452,8 @@ div::-webkit-scrollbar-thumb:hover {
     .message-content {
         font-size: 0.7rem;
     }
+    .mbti_p {
+        margin-bottom: 20px;
+    }
 }
 </style>
