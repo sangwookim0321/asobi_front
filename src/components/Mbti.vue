@@ -119,6 +119,13 @@ const sendMessage = () => {
         return
     }
 
+    // 테스트 완료 횟수 검사를 여기에 추가합니다.
+    if (storedData.testCompleteCount >= 3) {
+        msg.value = 'MBTI 테스트는 하루 3회 까지만 이용 가능합니다.'
+        msgShow.value = true
+        return
+    }
+
     if (success.value) {
         msg.value = '응답이 도착할때까지 기다려주세요.'
         msgShow.value = true
@@ -152,14 +159,6 @@ const sendMessage = () => {
         storedData.responseCount += 1
 
         if (res.data[0].content.includes("테스트를 종료할게요!")) {
-            if (storedData.testCompleteCount >= 3) {
-                msg.value = 'MBTI 테스트는 하루 3회 까지만 이용 가능합니다.'
-                msgShow.value = true
-                loader.value.hide()
-                success.value = false
-                return
-            }
-
             storedData.testCompleteCount += 1 // 테스트 완료 카운트 증가
             responseEnd.value = true
             msg.value = '테스트가 완료되었습니다. 결과를 확인해보세요!'
@@ -167,7 +166,7 @@ const sendMessage = () => {
             threadDelete()
         }
 
-        localStorage.setItem('apiLimits', JSON.stringify(storedData))
+        localStorage.setItem('mbtiApiCount', JSON.stringify(storedData))
     }, (err) => {
         console.log(err)
         msg.value = '서버 오류입니다. 잠시 후 다시 시도해주세요.'
